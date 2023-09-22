@@ -7,12 +7,25 @@ from api.utils import generate_sitemap, APIException
 
 api = Blueprint('api', __name__)
 
+@api.route('/user', methods=['POST'])
+def createUser():
+    body = request.get_json()
+    if "email" in body.keys() and body["email"] != "" and "password" in body.keys() and body["password"] != "":
+        user = User(
+            email=body.get("email".lower()),
+            password=body.get("password".lower()),
+        )
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({
+            "message": user.email + " has been created"
+        }), 201
+    return jsonify({
+        "message": "Attributes email and password are needed"
+    }), 400
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
+@api.route('/user', methods=['GET'])
+def getUsers():
+    users = User.query.all()
+    all_users = list(map(lambda x: x.serialize(), users))
+    return jsonify(all_users), 200

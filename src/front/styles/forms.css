@@ -1,0 +1,39 @@
+.login,
+.signup {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login__form {
+    width: 75%;
+}
+
+.form__contenedor__items {
+    display: block;
+    width: 100%;
+}
+
+.form__contenedor {
+    margin: 20px 0;
+}
+
+.submit {
+    width: 100%;
+    background-color: blue;
+    border-style: none;
+    border-radius: 2px;
+    padding: 10px;
+}
+
+.form__input {
+    padding: 5px;
+    color: black;
+}
+
+@media screen and (min-width: 768px) {
+    .login__form {
+        width: 25%;
+    }
+}
