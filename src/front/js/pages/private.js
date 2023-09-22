@@ -1,32 +1,42 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
 export const Private = () => {
+    const { actions } = useContext(Context);
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    if (token === "nuevoValor") {
-        return (
-            <div>
-                <h1>Hello User</h1>
-                <button
-                    onClick={() => {
-                        localStorage.removeItem("token");
-                        navigate("/");
-                    }}>
-                    Cerrar Sesión
-                </button>
-            </div>
-        );
-    }
     return (
-        <div>
-            <h1>Hello This is supposed to be private</h1>
-            <button
-                onClick={() => {
-                    navigate("/");
-                }}>
-                Ir a inicio
-            </button>
-        </div>
+        <main className="private">
+            {token === "nuevoValor" ? (
+                <div>
+                    <h1 style={{ textAlign: "center" }}>Hello User</h1>
+                    <button
+                        style={{ margin: "0 auto" }}
+                        onClick={() => {
+                            actions.removeToken();
+                            sessionStorage.removeItem("token");
+                            navigate("/");
+                        }}>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            ) : (
+                <div>
+                    <h1 style={{ textAlign: "center" }}>
+                        Hello This is supposed to be private
+                    </h1>
+                    <button
+                        style={{ margin: "0 auto" }}
+                        onClick={() => {
+                            actions.removeToken();
+                            sessionStorage.removeItem("token");
+                            navigate("/");
+                        }}>
+                        Ir a inicio
+                    </button>
+                </div>
+            )}
+        </main>
     );
 };

@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
 export const SignUp = () => {
+    const { actions } = useContext(Context);
     const [datos, setDatos] = useState();
     const navigate = useNavigate();
 
     return (
-        <div className="signup">
+        <main className="signup">
             <form
                 className="login__form"
                 onSubmit={e => {
                     e.preventDefault();
-                    localStorage.setItem("token", "nuevoValor");
+                    actions.generateToken(datos.email, datos.password);
                     navigate("/private");
                 }}>
                 <div className="form__contenedor">
@@ -22,6 +24,7 @@ export const SignUp = () => {
                         className="form__contenedor__items form__input"
                         type="email"
                         id="correo"
+                        placeholder="Correo Electrónico"
                         onChange={e => {
                             setDatos({ ...datos, email: e.target.value });
                         }}
@@ -38,6 +41,7 @@ export const SignUp = () => {
                         className="form__contenedor__items form__input"
                         type="password"
                         id="contraseña"
+                        placeholder="Contraseña"
                         onChange={e => {
                             setDatos({ ...datos, password: e.target.value });
                         }}
@@ -48,6 +52,6 @@ export const SignUp = () => {
                     Iniciar Sesión
                 </button>
             </form>
-        </div>
+        </main>
     );
 };
