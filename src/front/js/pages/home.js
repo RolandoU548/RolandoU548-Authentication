@@ -14,11 +14,11 @@ export const Home = () => {
 
 	return (
         <div className="app">
-            <Link className="boton__redireccion" to="/signup">
-                Registrarse
-            </Link>
             <Link className="boton__redireccion" to="/login">
                 Iniciar Sesión
+            </Link>
+            <Link className="boton__redireccion" to="/signup">
+                Registrarse
             </Link>
         </div>
 	);

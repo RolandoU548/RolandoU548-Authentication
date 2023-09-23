@@ -1,4 +1,4 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect} from "react";
 import {useNavigate} from 'react-router-dom'
 import { Context } from "../store/appContext";
 
@@ -6,6 +6,9 @@ export const LogIn = () => {
     const navigate = useNavigate()
     const { actions } = useContext(Context);
     const [datos, setDatos] = useState();
+
+    useEffect(()=>{actions.signOut()},[])
+
     return (
         <main className="login">
             <form

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,8 @@ export const SignUp = () => {
     const { actions } = useContext(Context);
     const [datos, setDatos] = useState();
     const navigate = useNavigate();
+
+    useEffect(()=>{actions.signOut()},[])
 
     const handleSumbit = async () => {
         const respuesta = await actions.createUser(
@@ -82,7 +84,7 @@ export const SignUp = () => {
                     />
                 </div>
                 <button type="submit" className="submit">
-                    Iniciar Sesión
+                    Registrarse
                 </button>
             </form>
         </main>
