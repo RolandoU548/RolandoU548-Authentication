@@ -18,7 +18,11 @@ export const SignUp = () => {
         } else if (respuesta === false) {
             null;
         } else {
-            navigate("/private");
+            const token = await actions.generateToken(datos.email, datos.password)
+            if(token.access_token){
+                actions.identificateUser(token.access_token);
+                navigate("/private");
+            };
         }
     };
 

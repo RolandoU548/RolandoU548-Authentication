@@ -1,20 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext} from "react";
+import {useNavigate} from 'react-router-dom'
 import { Context } from "../store/appContext";
-import { useNavigate } from "react-router-dom";
 
 export const LogIn = () => {
+    const navigate = useNavigate()
     const { actions } = useContext(Context);
     const [datos, setDatos] = useState();
-    const navigate = useNavigate();
-
     return (
         <main className="login">
             <form
                 className="login__form"
-                onSubmit={e => {
+                onSubmit={async(e) => {
                     e.preventDefault();
-                    actions.generateToken(datos.email, datos.password);
-                    navigate("/private");
+                    const token = await actions.generateToken(datos.email, datos.password)
+                    if (token === "Incorrect password"){
+                        alert("Contraseña incorrecta")
+                    } else if (token === "User doesn't exist"){
+                        alert("El usuario no está registrado")
+                    } else if(token.access_token){
+                        navigate("/private");
+                        actions.identificateUser(token.access_token);
+                    };
                 }}>
                 <div className="form__contenedor">
                     <label className="form__contenedor__items" htmlFor="correo">

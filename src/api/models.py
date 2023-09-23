@@ -15,6 +15,5 @@ class User(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "email": self.email,
-            "password": self.password
+            "email": self.email
         }

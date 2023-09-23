@@ -1,6 +1,6 @@
 const getState = ({ getStore, getActions, setStore }) => {
     return {
-        store: { token: null, user: { name: null, email: null } },
+        store: { token: localStorage.getItem("token") || null, user: { id: null, name: null, email: null } },
         actions: {
             createUser: async (name, email, password) => {
                 try {
@@ -17,13 +17,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     );
                     if (resp.status === 422) {
-                        console.error("User already exists");
                         return "User already exists";
-                    } else if (resp.status !== 201) {
+                    }
+                    if (!resp.ok) {
                         return false;
                     }
-                    const data = await resp.json();
-                    setStore({ user: { name: data.name, email: data.email } });
                     return true;
                 } catch (error) {
                     console.log("There has been an error", error);
@@ -43,19 +41,34 @@ const getState = ({ getStore, getActions, setStore }) => {
                             })
                         }
                     );
-                    if (resp.status !== 200)
-                        throw new Error("There has been an error");
+                    if (resp.status === 403){
+                        return "Incorrect password";
+                    }
+                    if (resp.status === 400){
+                        return "User doesn't exist";
+                    }
                     const data = await resp.json();
-                    sessionStorage.setItem("token", data.access_token);
+                    localStorage.setItem("token", data.access_token);
                     setStore({ token: data.access_token });
                     return data;
                 } catch (error) {
-                    console.log("Error generating Token", error);
+                    console.log("Error generating Token.", error);
                 }
             },
+            identificateUser: async (token)=>{
+                try{
+                    const resp = await fetch(process.env.BACKEND_URL + "api/user", {headers: {"Content-Type": "application/json", "authorization": "Bearer " + token}})
+                    const data = await resp.json()
+                    setStore({user: {id: data.id, name: data.name, email: data.email}})
+                    return data
+                }catch (error){
+                    console.log("There has been an error", error)
+                }
+            }
+            ,
             signOut: () => {
-                setStore({ token: null, user: { name: null, email: null } });
-                sessionStorage.removeItem("token");
+                setStore({ token: null, user: { id:null, name: null, email: null } });
+                localStorage.removeItem("token");
             }
         }
     };
