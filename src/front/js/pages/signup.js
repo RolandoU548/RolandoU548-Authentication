@@ -7,15 +7,44 @@ export const SignUp = () => {
     const [datos, setDatos] = useState();
     const navigate = useNavigate();
 
+    const handleSumbit = async () => {
+        const respuesta = await actions.createUser(
+            datos.name,
+            datos.email,
+            datos.password
+        );
+        if (respuesta === "User already exists") {
+            alert("El usuario ya existe");
+        } else if (respuesta === false) {
+            null;
+        } else {
+            navigate("/private");
+        }
+    };
+
     return (
         <main className="signup">
             <form
                 className="login__form"
                 onSubmit={e => {
                     e.preventDefault();
-                    actions.generateToken(datos.email, datos.password);
-                    navigate("/private");
+                    handleSumbit();
                 }}>
+                <div className="form__contenedor">
+                    <label className="form__contenedor__items" htmlFor="nombre">
+                        Nombre
+                    </label>
+                    <input
+                        className="form__contenedor__items form__input"
+                        type="text"
+                        id="nombre"
+                        placeholder="Nombre"
+                        onChange={e => {
+                            setDatos({ ...datos, name: e.target.value });
+                        }}
+                        required
+                    />
+                </div>
                 <div className="form__contenedor">
                     <label className="form__contenedor__items" htmlFor="correo">
                         Correo Electrónico

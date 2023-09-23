@@ -14,8 +14,7 @@ export const Private = () => {
                     <button
                         style={{ margin: "0 auto" }}
                         onClick={() => {
-                            actions.removeToken();
-                            sessionStorage.removeItem("token");
+                            actions.signOut();
                             navigate("/");
                         }}>
                         Cerrar Sesión
@@ -29,8 +28,7 @@ export const Private = () => {
                     <button
                         style={{ margin: "0 auto" }}
                         onClick={() => {
-                            actions.removeToken();
-                            sessionStorage.removeItem("token");
+                            actions.signOut();
                             navigate("/");
                         }}>
                         Ir a inicio

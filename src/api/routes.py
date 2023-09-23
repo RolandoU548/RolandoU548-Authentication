@@ -13,34 +13,39 @@ api = Blueprint('api', __name__)
 
 @api.route("/token", methods=["POST"])
 def createToken():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    body = request.get_json()
+    email = body.get("email", None)
+    password = body.get("password", None)
     if email != "test@gmail.com" or password != "test":
         return jsonify({"msg": "Bad email or password"}), 401
 
+    user = User.query.filter_by(email=email).first()
     access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    return jsonify({"access_token":access_token, "user": user.serialize()})
 
 
 @api.route('/user', methods=['POST'])
 def createUser():
     body = request.get_json()
 
-    usuario = User.query.filter_by(email=body["email"]).first()
-    if usuario:
-        return jsonify({"message": "User " + body["email"] + " already exists"}), 400
-    if "email" in body.keys() and body["email"] != "" and "password" in body.keys() and body["password"] != "":
+    possible_user = User.query.filter_by(email=body["email"]).first()
+    if possible_user:
+        return jsonify({"message": "User " + body["email"] + " already exists"}), 422
+    if "email" in body.keys() and body["email"] != "" and "password" in body.keys() and body["password"] != "" and "name" in body.keys() and body["name"] != "":
         user = User(
-            email=body.get("email".lower()),
-            password=body.get("password".lower()),
+            name=body.get("name").capitalize(),
+            email=body.get("email").lower(),
+            password=body.get("password"),
         )
         db.session.add(user)
         db.session.commit()
         return jsonify({
-            "message": user.email + " has been created"
+            "message": "A user has been created",
+            "name": user.name,
+            "email": user.email
         }), 201
     return jsonify({
-        "message": "Attributes email and password are needed"
+        "message": "Attributes name, email and password are needed"
     }), 400
 
 @api.route('/user', methods=['GET'])

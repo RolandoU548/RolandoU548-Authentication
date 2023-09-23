@@ -13,7 +13,7 @@ export const LogIn = () => {
                 className="login__form"
                 onSubmit={e => {
                     e.preventDefault();
-                    sessionStorage.setItem("token", "nuevoValor");
+                    actions.generateToken(datos.email, datos.password);
                     navigate("/private");
                 }}>
                 <div className="form__contenedor">
